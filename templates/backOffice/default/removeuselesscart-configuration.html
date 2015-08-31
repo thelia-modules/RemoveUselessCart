@@ -1,0 +1,33 @@
+{extends file="admin-layout.tpl"}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'modules'}
+{/block}
+
+{block name="page-title"}{intl l='Modules'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+
+{block name="main-content"}
+<div id="wrapper" class="container">
+
+    {if $general_error}
+        <div class="alert alert-danger">
+            {$general_error}
+        </div>
+    {/if}
+
+    <ul class="breadcrumb">
+        <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
+        <li><a href="{url path='/admin/configuration'}">{intl l="Configuration"}</a></li>
+        <li>{intl l="Attributes types" d="attributetype.bo.default"}</li>
+    </ul>
+
+    <div class="general-block-decorator">
+    </div>
+</div>
+{/block}
+
+{block name="javascript-initialization"}
+{/block}
