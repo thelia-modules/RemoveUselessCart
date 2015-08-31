@@ -8,4 +8,8 @@
         <default key="_controller">RemoveUselessCart\Controller\RemoveUselessCartController::viewConfigAction</default>
     </route>
 
+    <route id="removeuselesscart.remove" path="/admin/module/RemoveUselessCart/remove">
+        <default key="_controller">RemoveUselessCart\Controller\RemoveUselessCartController::removeAction</default>
+    </route>
+
 </routes>
