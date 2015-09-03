@@ -51,6 +51,45 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $startDate = $this->checkInput($input, $output);
+
+        if ($startDate === null) {
+            return;
+        }
+
+        // Get option
+        $removeAll = false;
+
+        if ($input->getOption('all')) {
+            $removeAll = true;
+        }
+
+        try {
+            $output->writeln('This may take a while with huge databases and a distant date. Please have a coffee and wait.');
+
+            // Build event from command line data & dispatch it
+            $event = new RemoveUselessCartEvent($startDate, $removeAll, $output);
+            $this->getDispatcher()->dispatch('remove-useless-carts', $event);
+
+            // Get number of removed carts
+            $removeCarts = $event->getRemovedCarts();
+
+            $output->writeln("<info>Successfully removed $removeCarts carts</info>");
+        } catch (\Exception $e) {
+            $output->writeln("<error>Error</error>");
+            $output->writeln($e);
+        }
+    }
+
+    /**
+     * Check if the input value is correct
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return bool|mixed|null|string
+     */
+    public function checkInput(InputInterface $input, OutputInterface $output)
+    {
         // Get inputted days
         if (null !== $days = $input->getOption('day')) {
 
@@ -66,7 +105,7 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
                     false
                 )
                 ) {
-                    return;
+                    return null;
                 }
             }
 
@@ -88,44 +127,24 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
                     if ($isDateTime !== true) {
                         // Prompt wrong time format
                         $output->writeln('<comment>Wrong time format. Time should look like \'hh:mm:ss\'</comment>');
-                        return;
+                        return null;
                     }
                 }
             } else {
                 // Prompt wrong date format
                 $output->writeln('<comment>Wrong date format. Date should look like \'yyyy-mm-dd\'</comment>');
-                return;
+                return null;
             }
         } else {
             $output->writeln("<comment>No argument nor option</comment>");
-            return;
+            return null;
         }
 
-
-        // Get option
-        $removeAll = false;
-
-        if ($input->getOption('all')) {
-            $removeAll = true;
-        }
-
-        try {
-            // Build event from command line data & dispatch it
-            $event = new RemoveUselessCartEvent($startDate, $removeAll);
-            $this->getDispatcher()->dispatch('remove-useless-carts', $event);
-
-            // Get number of removed carts
-            $removeCarts = $event->getRemovedCarts();
-
-            $output->writeln("<info>Successfully removed $removeCarts carts</info>");
-        } catch (\Exception $e) {
-            $output->writeln("<error>Error</error>");
-            $output->writeln($e);
-        }
+        return $startDate;
     }
 
     /**
-     * Check if a date is valid
+     * Check if the date is valid
      *
      * @param $date
      * @return bool
@@ -137,7 +156,7 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
     }
 
     /**
-     * check if a datetime is valid
+     * check if the datetime is valid
      *
      * @param $datetime
      * @return bool

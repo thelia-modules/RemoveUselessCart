@@ -19,6 +19,8 @@ composer require thelia/remove-useless-cart-module:~1.0
 
 ## Usage
 
+**Important:** be aware that this operation may take a while with huge databases. Do it in many times or wait for success or error message patiently.
+
 ### Administration panel
 
 - Click 'Configure' in front of the module name

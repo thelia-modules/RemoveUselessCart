@@ -4,6 +4,11 @@ namespace RemoveUselessCart\Event;
 
 use Thelia\Core\Event\ActionEvent;
 
+/**
+ * Class RemoveUselessCartEvent
+ * @package RemoveUselessCart\Event
+ * @author Etienne Perriere - OpenStudio <eperriere@openstudio.fr>
+ */
 class RemoveUselessCartEvent extends ActionEvent
 {
     protected $startDate;
@@ -12,8 +17,8 @@ class RemoveUselessCartEvent extends ActionEvent
 
     public function __construct($startDate, $removeAll)
     {
-        $this->startDate = $startDate;
-        $this->removeAll = $removeAll;
+        $this->setStartDate($startDate);
+        $this->setRemoveAll($removeAll);
     }
 
     /**

@@ -29,7 +29,7 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
 
     /**
      * Propel does not support DELETE with LEFT JOIN, so the function gets
-     * carts to remove by 1000 and removes them while there are some to remove.
+     * carts to remove by range and removes them until there are no more to delete.
      *
      * @param RemoveUselessCartEvent $event
      * @throws \Propel\Runtime\Exception\PropelException
@@ -39,7 +39,7 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
         $totalRemovedCarts = 0;
 
         do {
-            // Filter
+            // Create query filtered by date
             $findCartQuery = CartQuery::create()
                 ->filterByUpdatedAt($event->getStartDate(), Criteria::LESS_EQUAL);
 
@@ -53,7 +53,7 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
             // Get an array of cart IDs to remove
             $cartList = $findCartQuery
                 ->select('ID')
-                ->limit(1000)
+                ->limit(2000)
                 ->find()
                 ->toArray();
 
@@ -63,8 +63,7 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
                 ->delete();
 
             // Get number of removed carts
-            $removedCarts = count($cartList);
-            $totalRemovedCarts += $removedCarts;
+            $totalRemovedCarts += count($cartList);
         } while (!empty($cartList));
 
         // Set number of removed carts
