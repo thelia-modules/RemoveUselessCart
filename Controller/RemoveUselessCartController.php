@@ -22,7 +22,6 @@ class RemoveUselessCartController extends BaseAdminController
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::VIEW)) {
             return $response;
-            
         }
 
         return $this->render("removeuselesscart-configuration", []);
@@ -54,7 +53,6 @@ class RemoveUselessCartController extends BaseAdminController
 
             // Redirect
             return new RedirectResponse($form->getSuccessUrl());
-
         } catch (\Exception $e) {
             $this->setupFormErrorContext(
                 null,

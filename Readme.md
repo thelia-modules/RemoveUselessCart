@@ -36,9 +36,9 @@ php Thelia carts:remove [arguments] [options]
 
 #### Arguments
 
-```date``` optional (required if --day option isn't set) - *yyyy-mm-dd* formated date. Date from which you want to remove carts.
+```date``` optional (required if --day option isn't set) | *yyyy-mm-dd* formated date. Date from which you want to remove carts.
 
-```time``` optional - *hh:mm:ss* formated time. Use it after ```date```, separated by a space, for your date to be more specific.
+```time``` optional | *hh:mm:ss* formated time. Use it after ```date```, separated by a space, for your date to be more specific.
 
 #### Options
 

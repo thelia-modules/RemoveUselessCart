@@ -72,7 +72,6 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
 
             // Create date from inputted days
             $startDate = date('Y-m-d', strtotime("- $days days"));
-
         } elseif (null !== $startDate = $input->getArgument('start_date')) { // Get inputted date
 
             // Check if the date is a correct date
@@ -81,7 +80,6 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
             if ($isDate === true) {
                 // Get inputted time if there is one
                 if ($startTime = $input->getArgument('start_time')) {
-
                     $startDate .= ' '.$startTime;
 
                     // Check if the time is a correct one
@@ -120,7 +118,6 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
             $removeCarts = $event->getRemovedCarts();
 
             $output->writeln("<info>Successfully removed $removeCarts carts</info>");
-
         } catch (\Exception $e) {
             $output->writeln("<error>Error</error>");
             $output->writeln($e);

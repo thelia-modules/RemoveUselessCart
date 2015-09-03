@@ -14,7 +14,6 @@ use Thelia\Model\CartQuery;
  */
 class RemoveUselessCartEventListeners implements EventSubscriberInterface
 {
-
     /**
      * Returns an array of event names this subscriber wants to listen to.
 
@@ -66,7 +65,6 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
             // Get number of removed carts
             $removedCarts = count($cartList);
             $totalRemovedCarts += $removedCarts;
-
         } while (!empty($cartList));
 
         // Set number of removed carts
