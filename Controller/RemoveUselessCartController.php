@@ -2,42 +2,59 @@
 
 namespace RemoveUselessCart\Controller;
 
-use Propel\Runtime\ActiveQuery\Criteria;
+use RemoveUselessCart\Event\RemoveUselessCartEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
-use Thelia\Model\CartQuery;
 
+/**
+ * Class RemoveUselessCartController
+ * @package RemoveUselessCart\Controller
+ * @author Etienne Perriere - OpenStudio <eperriere@openstudio.fr>
+ */
 class RemoveUselessCartController extends BaseAdminController
 {
+    /**
+     * @return mixed|\Thelia\Core\HttpFoundation\Response
+     */
     public function viewConfigAction()
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::VIEW)) {
             return $response;
+            
         }
 
         return $this->render("removeuselesscart-configuration", []);
     }
 
+    /**
+     * Remove carts with last_update older than the given date
+     *
+     * @return mixed|RedirectResponse|\Thelia\Core\HttpFoundation\Response
+     */
     public function removeAction()
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::DELETE)) {
             return $response;
         }
 
-        // Validate form and get data
         $form = $this->createForm('removeuselesscart_form');
 
         try {
-            $startDate = $this->validateForm($form, 'POST')->getData()['start_date'];
+            // Validate form
+            $vForm = $this->validateForm($form, 'POST');
 
-            CartQuery::create()
-                ->filterByUpdatedAt($startDate, Criteria::LESS_EQUAL)
-                ->delete();
+            // Build event from form data & dispatch it
+            $event = new RemoveUselessCartEvent($vForm->getData()['start_date'], $vForm->getData()['remove_all']);
+            $this->getDispatcher()->dispatch('remove-useless-carts', $event);
+
+            // Get number of removed carts
+            $this->getSession()->getFlashBag()->add('remove-cart-result', 'Successfully removed '.$event->getRemovedCarts().' carts');
 
             // Redirect
             return new RedirectResponse($form->getSuccessUrl());
+
         } catch (\Exception $e) {
             $this->setupFormErrorContext(
                 null,
@@ -47,6 +64,5 @@ class RemoveUselessCartController extends BaseAdminController
 
             return $this->render('removeuselesscart-configuration', []);
         }
-
     }
 }

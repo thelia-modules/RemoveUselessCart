@@ -24,6 +24,16 @@
         </div>
     {/if}
 
+    {flash type='remove-cart-result'}
+        <div class="alert alert-success">
+            {$MESSAGE}
+        </div>
+    {/flash}
+
+    <div class="alert alert-info">
+        <b>Warning :</b> this operation may take a while for huge databases. You should do it in several parts. Please wait until success or error message is displayed.
+    </div>
+
     <div class="general-block-decorator">
         <div class="row">
             <div class="col-md-12 title title-without-tabs">
@@ -33,7 +43,7 @@
 
         <div class="form-container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
 
                     {form name='removeuselesscart_form'}
                         <form action="{url path='admin/module/RemoveUselessCart/remove'}" method="post">
@@ -43,13 +53,21 @@
 
                             <!-- Start interval date -->
                             <div class="form-group">
-                            {form_field form=$form field='start_date'}
-                                <label for="startDate">{intl l=$label d='removeuselessform.bo.default'}</label>
-                                <div class="input-group">
-                                    <input type="text" name="{$name}" value="{'+1 week'|date_format:"%Y-%m-%d %H:%M:%S"}" required class="form-control" id="startDate">
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                                </div>
-                            {/form_field}
+                                {form_field form=$form field='start_date'}
+                                    <label for="startDate">{intl l=$label d='removeuselessform.bo.default'}</label>
+                                    <div class="input-group">
+                                        <input type="text" name="{$name}" value="{'-1 week'|date_format:"%Y-%m-%d %H:%M:%S"}" required class="form-control" id="startDate">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                    </div>
+                                {/form_field}
+                            </div>
+
+                            <div class="checkbox">
+                                {form_field form=$form field='remove_all'}
+                                    <label>
+                                        <input type="checkbox" name="{$name}"> {$label}
+                                    </label>
+                                {/form_field}
                             </div>
 
                             <button type="submit" class="btn btn-primary">OK</button>
@@ -76,7 +94,7 @@
         (function($) {
             {$langcode = {lang attr="code"}|substr:0:2}
 
-            $('input').datetimepicker({
+            $('#startDate').datetimepicker({
                 locale: "{$langcode}",
                 format: "YYYY-MM-DD HH:mm:ss"
             });

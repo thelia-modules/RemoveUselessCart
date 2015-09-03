@@ -9,9 +9,13 @@
     </forms>
 
     <commands>
-        <!--
-        <command class="RemoveUselessCart\Command\MySuperCommand" />
-        -->
+        <command class="RemoveUselessCart\Command\RemoveUselessCartCommand" />
     </commands>
+
+    <services>
+        <service id="removeuselesscart.eventlisteners" class="RemoveUselessCart\EventListeners\RemoveUselessCartEventListeners">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+    </services>
 
 </config>

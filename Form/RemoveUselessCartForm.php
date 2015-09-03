@@ -26,18 +26,17 @@ class RemoveUselessCartForm extends BaseForm
         $this->formBuilder
             ->add('start_date', 'text',
                 [
-                    'label' => 'Remove all carts after this date',
-                    'required'    => true,
+                    'label' => 'Remove older carts from this date',
+                    'required' => true,
                     'constraints' => [
                         new Constraints\NotBlank(),
                         new Constraints\Callback([
-                            "methods" => [
-                                [ $this, "checkDate" ],
-                            ],
+                            "methods" => [[ $this, "checkDate" ]],
                         ])
                     ]
                 ]
-            );
+            )
+            ->add('remove_all', 'checkbox', ['label' => 'Remove even not empty carts']);
     }
 
     /**
