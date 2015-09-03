@@ -4,7 +4,6 @@ namespace RemoveUselessCart\Form;
 
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
 
 /**
@@ -26,7 +25,7 @@ class RemoveUselessCartForm extends BaseForm
         $this->formBuilder
             ->add('start_date', 'text',
                 [
-                    'label' => 'Remove older carts from this date',
+                    'label' => $this->translator->trans('Remove older carts from this date', [],  'removeuselesscart'),
                     'required' => true,
                     'constraints' => [
                         new Constraints\NotBlank(),
@@ -36,7 +35,11 @@ class RemoveUselessCartForm extends BaseForm
                     ]
                 ]
             )
-            ->add('remove_all', 'checkbox', ['label' => 'Remove even not empty carts']);
+            ->add('remove_all', 'checkbox',
+                [
+                    'label' => $this->translator->trans('Remove even not empty carts', [], 'removeuselesscart')
+                ]
+            );
     }
 
     /**
@@ -50,10 +53,16 @@ class RemoveUselessCartForm extends BaseForm
         $format = self::PHP_DATE_FORMAT;
 
         if (! empty($value) && false === \DateTime::createFromFormat($format, $value)) {
-            $context->addViolation(Translator::getInstance()->trans("Date '%date' is invalid, please enter a valid date using %fmt format", [
-                '%fmt' => self::MOMENT_JS_DATE_FORMAT,
-                '%date' => $value
-            ]));
+            $context->addViolation(
+                $this->translator->trans(
+                    "Date '%date' is invalid, please enter a valid date using %fmt format",
+                    [
+                        '%date' => $value,
+                        '%fmt' => self::MOMENT_JS_DATE_FORMAT
+                    ],
+                    'removeuselesscart'
+                )
+            );
         }
     }
 

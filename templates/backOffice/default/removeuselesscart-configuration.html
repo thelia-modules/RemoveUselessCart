@@ -31,13 +31,13 @@
     {/flash}
 
     <div class="alert alert-info">
-        <b>Warning :</b> this operation may take a while for huge databases. You should do it in several parts. Please wait until success or error message is displayed.
+        {intl l='<b>Warning :</b> this operation may take a while for huge databases. You should do it in several parts. Please wait until success or error message is displayed.' d='removeuselesscart.bo.default'}
     </div>
 
     <div class="general-block-decorator">
         <div class="row">
             <div class="col-md-12 title title-without-tabs">
-                {intl l="Remove useless carts" d='removeuselessform.bo.default'}
+                {intl l="Remove useless carts" d='removeuselesscart.bo.default'}
             </div>
         </div>
 
@@ -54,7 +54,7 @@
                             <!-- Start interval date -->
                             <div class="form-group">
                                 {form_field form=$form field='start_date'}
-                                    <label for="startDate">{intl l=$label d='removeuselessform.bo.default'}</label>
+                                    <label for="startDate">{$label}</label>
                                     <div class="input-group">
                                         <input type="text" name="{$name}" value="{'-1 week'|date_format:"%Y-%m-%d %H:%M:%S"}" required class="form-control" id="startDate">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
@@ -70,7 +70,7 @@
                                 {/form_field}
                             </div>
 
-                            <button type="submit" class="btn btn-primary">OK</button>
+                            <button type="submit" class="btn btn-primary">{intl l='OK' d='removeuselesscart.bo.default'}</button>
                         </form>
                     {/form}
 

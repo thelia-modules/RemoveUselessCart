@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
+use Thelia\Core\Translation\Translator;
 
 /**
  * Class RemoveUselessCartController
@@ -49,7 +50,14 @@ class RemoveUselessCartController extends BaseAdminController
             $this->getDispatcher()->dispatch('remove-useless-carts', $event);
 
             // Get number of removed carts
-            $this->getSession()->getFlashBag()->add('remove-cart-result', 'Successfully removed '.$event->getRemovedCarts().' carts');
+            $this->getSession()->getFlashBag()->add(
+                'remove-cart-result',
+                Translator::getInstance()->trans(
+                    'Successfully removed %nbCarts carts!',
+                    ['%nbCarts' => $event->getRemovedCarts()],
+                    'removeuselesscart'
+                )
+            );
 
             // Redirect
             return new RedirectResponse($form->getSuccessUrl());
