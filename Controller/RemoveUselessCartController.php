@@ -3,6 +3,7 @@
 namespace RemoveUselessCart\Controller;
 
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
+use RemoveUselessCart\Event\RemoveUselessCartEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
@@ -47,7 +48,7 @@ class RemoveUselessCartController extends BaseAdminController
 
             // Build event from form data & dispatch it
             $event = new RemoveUselessCartEvent($vForm->getData()['start_date'], $vForm->getData()['remove_all']);
-            $this->getDispatcher()->dispatch('remove-useless-carts', $event);
+            $this->getDispatcher()->dispatch(RemoveUselessCartEvents::REMOVE_USELESS_CARTS, $event);
 
             // Get number of removed carts
             $this->getSession()->getFlashBag()->add(

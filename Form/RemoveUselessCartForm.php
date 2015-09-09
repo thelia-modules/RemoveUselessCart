@@ -50,9 +50,7 @@ class RemoveUselessCartForm extends BaseForm
      */
     public function checkDate($value, ExecutionContextInterface $context)
     {
-        $format = self::PHP_DATE_FORMAT;
-
-        if (! empty($value) && false === \DateTime::createFromFormat($format, $value)) {
+        if (! empty($value) && false === \DateTime::createFromFormat(self::PHP_DATE_FORMAT, $value)) {
             $context->addViolation(
                 $this->translator->trans(
                     "Date '%date' is invalid, please enter a valid date using %fmt format",

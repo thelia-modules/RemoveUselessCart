@@ -5,6 +5,7 @@ namespace RemoveUselessCart\EventListeners;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Propel;
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
+use RemoveUselessCart\Event\RemoveUselessCartEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Install\Database;
 use Thelia\Model\CartQuery;
@@ -26,7 +27,7 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'remove-useless-carts' => ['remove', 128]
+            RemoveUselessCartEvents::REMOVE_USELESS_CARTS => ['remove', 128]
         ];
     }
 
