@@ -4,8 +4,10 @@ namespace RemoveUselessCart\Controller;
 
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
 use RemoveUselessCart\Event\RemoveUselessCartEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Thelia\Controller\Admin\BaseAdminController;
+use Thelia\Core\HttpFoundation\Session\Session;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Translation\Translator;
@@ -34,7 +36,7 @@ class RemoveUselessCartController extends BaseAdminController
      *
      * @return mixed|RedirectResponse|\Thelia\Core\HttpFoundation\Response
      */
-    public function removeAction()
+    public function removeAction(Session $session, EventDispatcherInterface $dispatcher)
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::DELETE)) {
             return $response;
@@ -48,10 +50,10 @@ class RemoveUselessCartController extends BaseAdminController
 
             // Build event from form data & dispatch it
             $event = new RemoveUselessCartEvent($vForm->getData()['start_date'], $vForm->getData()['remove_all']);
-            $this->getDispatcher()->dispatch(RemoveUselessCartEvents::REMOVE_USELESS_CARTS, $event);
+            $dispatcher->dispatch($event, RemoveUselessCartEvents::REMOVE_USELESS_CARTS);
 
             // Get number of removed carts
-            $this->getSession()->getFlashBag()->add(
+            $session->getFlashBag()->add(
                 'remove-cart-result',
                 Translator::getInstance()->trans(
                     'Successfully removed %nbCarts carts!',

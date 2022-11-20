@@ -2,8 +2,10 @@
 
 namespace RemoveUselessCart\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Validator\Constraints;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Thelia\Form\BaseForm;
 
 /**
@@ -23,7 +25,7 @@ class RemoveUselessCartForm extends BaseForm
     protected function buildForm()
     {
         $this->formBuilder
-            ->add('start_date', 'text',
+            ->add('start_date', TextareaType::class,
                 [
                     'label' => $this->translator->trans('Remove older carts from this date', [],  'removeuselesscart'),
                     'required' => true,
@@ -35,7 +37,7 @@ class RemoveUselessCartForm extends BaseForm
                     ]
                 ]
             )
-            ->add('remove_all', 'checkbox',
+            ->add('remove_all', CheckboxType::class,
                 [
                     'label' => $this->translator->trans('Remove even not empty carts', [], 'removeuselesscart')
                 ]
@@ -67,7 +69,7 @@ class RemoveUselessCartForm extends BaseForm
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'removeuselesscart_form';
     }

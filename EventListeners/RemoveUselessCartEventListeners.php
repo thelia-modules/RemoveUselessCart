@@ -2,13 +2,11 @@
 
 namespace RemoveUselessCart\EventListeners;
 
-use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Propel;
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
 use RemoveUselessCart\Event\RemoveUselessCartEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Install\Database;
-use Thelia\Model\CartQuery;
 use Thelia\Model\Map\ModuleTableMap;
 
 /**

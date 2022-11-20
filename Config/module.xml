@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://thelia.net/schema/dic/module"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://thelia.net/schema/dic/module http://thelia.net/schema/dic/module/module-2_0.xsd">
+        xsi:schemaLocation="http://thelia.net/schema/dic/module http://thelia.net/schema/dic/module/module-2_2.xsd">
     <fullnamespace>RemoveUselessCart\RemoveUselessCart</fullnamespace>
     <descriptive locale="en_US">
         <title>Remove useless carts</title>
@@ -13,11 +13,13 @@
         <language>en_US</language>
         <language>fr_FR</language>
     </languages>
-    <version>0.1</version>
-    <author>
-        <name>Etienne Perriere</name>
-        <email>eperriere@openstudio.fr</email>
-    </author>
+    <version>2.0.0</version>
+    <authors>
+        <author>
+            <name>Etienne Perriere</name>
+            <email>eperriere@openstudio.fr</email>
+        </author>
+    </authors>
     <type>classic</type>
     <thelia>2.0</thelia>
     <stability>beta</stability>

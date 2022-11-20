@@ -65,7 +65,7 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
                 ($input->getOption('all')) ? true : false,
                 $output
             );
-            $this->getDispatcher()->dispatch(RemoveUselessCartEvents::REMOVE_USELESS_CARTS, $event);
+            $this->getDispatcher()->dispatch($event, RemoveUselessCartEvents::REMOVE_USELESS_CARTS);
 
             // Get number of removed carts
             $removeCarts = $event->getRemovedCarts();
