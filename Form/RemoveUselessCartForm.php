@@ -6,6 +6,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
 
 /**
@@ -16,30 +17,30 @@ use Thelia\Form\BaseForm;
 class RemoveUselessCartForm extends BaseForm
 {
     // The date format for the start date
-    const PHP_DATE_FORMAT = "Y-m-d H:i:s";
-    const MOMENT_JS_DATE_FORMAT = "YYYY-MM-DD HH:mm:ss";
+    public const PHP_DATE_FORMAT = "Y-m-d H:i:s";
+    public const MOMENT_JS_DATE_FORMAT = "YYYY-MM-DD HH:mm:ss";
 
     /**
-     * @return null
+     * @return void
      */
-    protected function buildForm()
+    protected function buildForm(): void
     {
         $this->formBuilder
             ->add('start_date', TextareaType::class,
                 [
-                    'label' => $this->translator->trans('Remove older carts from this date', [],  'removeuselesscart'),
+                    'label' => Translator::getInstance()->trans('Remove older carts from this date', [],  'removeuselesscart'),
                     'required' => true,
                     'constraints' => [
                         new Constraints\NotBlank(),
                         new Constraints\Callback([
-                            "methods" => [[ $this, "checkDate" ]],
+                            "callback" => [$this, "checkDate"],
                         ])
                     ]
                 ]
             )
             ->add('remove_all', CheckboxType::class,
                 [
-                    'label' => $this->translator->trans('Remove even not empty carts', [], 'removeuselesscart')
+                    'label' => Translator::getInstance()->trans('Remove even not empty carts', [], 'removeuselesscart')
                 ]
             );
     }
@@ -47,14 +48,14 @@ class RemoveUselessCartForm extends BaseForm
     /**
      * Validate a date entered with the current edition Language date format.
      *
-     * @param string                    $value
+     * @param string $value
      * @param ExecutionContextInterface $context
      */
-    public function checkDate($value, ExecutionContextInterface $context)
+    public function checkDate(string $value, ExecutionContextInterface $context): void
     {
         if (! empty($value) && false === \DateTime::createFromFormat(self::PHP_DATE_FORMAT, $value)) {
             $context->addViolation(
-                $this->translator->trans(
+                Translator::getInstance()->trans(
                     "Date '%date' is invalid, please enter a valid date using %fmt format",
                     [
                         '%date' => $value,
@@ -69,7 +70,7 @@ class RemoveUselessCartForm extends BaseForm
     /**
      * @return string
      */
-    public static function getName()
+    public static function getName(): string
     {
         return 'removeuselesscart_form';
     }

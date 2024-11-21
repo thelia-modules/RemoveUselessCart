@@ -4,9 +4,12 @@ namespace RemoveUselessCart\Controller;
 
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
 use RemoveUselessCart\Event\RemoveUselessCartEvents;
+use RemoveUselessCart\Form\RemoveUselessCartForm;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Attribute\Route;
 use \Thelia\Controller\Admin\BaseAdminController;
+use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\HttpFoundation\Session\Session;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
@@ -20,9 +23,10 @@ use Thelia\Core\Translation\Translator;
 class RemoveUselessCartController extends BaseAdminController
 {
     /**
-     * @return mixed|\Thelia\Core\HttpFoundation\Response
+     * @return mixed|Response
      */
-    public function viewConfigAction()
+    #[Route('/admin/module/RemoveUselessCart', name: 'removeuselesscart.configuration')]
+    public function viewConfigAction(): mixed
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::VIEW)) {
             return $response;
@@ -34,15 +38,16 @@ class RemoveUselessCartController extends BaseAdminController
     /**
      * Remove carts with last_update older than the given date
      *
-     * @return mixed|RedirectResponse|\Thelia\Core\HttpFoundation\Response
+     * @return mixed|RedirectResponse|Response
      */
-    public function removeAction(Session $session, EventDispatcherInterface $dispatcher)
+    #[Route('/admin/module/RemoveUselessCart/remove', name: 'removeuselesscart.remove')]
+    public function removeAction(Session $session, EventDispatcherInterface $dispatcher): mixed
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::DELETE)) {
             return $response;
         }
 
-        $form = $this->createForm('removeuselesscart_form');
+        $form = $this->createForm(RemoveUselessCartForm::getName());
 
         try {
             // Validate form
@@ -66,7 +71,7 @@ class RemoveUselessCartController extends BaseAdminController
             return new RedirectResponse($form->getSuccessUrl());
         } catch (\Exception $e) {
             $this->setupFormErrorContext(
-                null,
+                'remove',
                 $e->getMessage(),
                 $form
             );

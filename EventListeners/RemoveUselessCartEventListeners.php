@@ -16,18 +16,6 @@ use Thelia\Model\Map\ModuleTableMap;
  */
 class RemoveUselessCartEventListeners implements EventSubscriberInterface
 {
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-
-     * @return array The event names to listen to
-     * @api
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            RemoveUselessCartEvents::REMOVE_USELESS_CARTS => ['remove', 128]
-        ];
-    }
 
     /**
      * Propel does not support DELETE with LEFT JOIN, so the function gets
@@ -59,5 +47,18 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
 
         // Fill event with number of removed carts
         $event->setRemovedCarts($stmtRemoveCarts->rowCount());
+    }
+
+    /**
+     * Returns an array of event names this subscriber wants to listen to.
+
+     * @return array The event names to listen to
+     * @api
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            RemoveUselessCartEvents::REMOVE_USELESS_CARTS => ['remove', 128]
+        ];
     }
 }
