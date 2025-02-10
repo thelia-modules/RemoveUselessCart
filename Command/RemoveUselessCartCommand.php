@@ -5,6 +5,7 @@ namespace RemoveUselessCart\Command;
 use DateTime;
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
 use RemoveUselessCart\Event\RemoveUselessCartEvents;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -50,7 +51,7 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (null === $startDate = $this->checkInput($input, $output)) {
             return;
@@ -74,7 +75,9 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
         } catch (\Exception $e) {
             $output->writeln("<error>Error</error>");
             $output->writeln($e);
+            return Command::FAILURE;
         }
+        return Command::SUCCESS;
     }
 
     /**
