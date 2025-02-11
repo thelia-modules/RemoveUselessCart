@@ -51,10 +51,10 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         if (null === $startDate = $this->checkInput($input, $output)) {
-            return;
+            return Command::FAILURE;
         }
 
         try {
