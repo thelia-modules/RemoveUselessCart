@@ -32,7 +32,7 @@ class RemoveUselessCartEvent extends ActionEvent
     /**
      * @param mixed $startDate
      */
-    public function setStartDate($startDate): void
+    public function setStartDate(mixed $startDate): void
     {
         $this->startDate = $startDate;
     }
@@ -48,7 +48,7 @@ class RemoveUselessCartEvent extends ActionEvent
     /**
      * @param mixed $removeAll
      */
-    public function setRemoveAll($removeAll): void
+    public function setRemoveAll(mixed $removeAll): void
     {
         $this->removeAll = $removeAll;
     }
@@ -64,7 +64,7 @@ class RemoveUselessCartEvent extends ActionEvent
     /**
      * @param mixed $removedCarts
      */
-    public function setRemovedCarts($removedCarts): void
+    public function setRemovedCarts(mixed $removedCarts): void
     {
         $this->removedCarts = $removedCarts;
     }

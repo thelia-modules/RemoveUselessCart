@@ -2,11 +2,12 @@
 
 namespace RemoveUselessCart\EventListeners;
 
+use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Propel;
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
 use RemoveUselessCart\Event\RemoveUselessCartEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Thelia\Install\Database;
+use Thelia\Core\Install\Database;
 use Thelia\Model\Map\ModuleTableMap;
 
 /**
@@ -23,9 +24,8 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
      * Do 5 iterations to avoid server timeout
      *
      * @param RemoveUselessCartEvent $event
-     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function remove(RemoveUselessCartEvent $event)
+    public function remove(RemoveUselessCartEvent $event): void
     {
         $startDate = $event->getStartDate();
 
@@ -45,7 +45,7 @@ class RemoveUselessCartEventListeners implements EventSubscriberInterface
         // Execute query
         $stmtRemoveCarts = $database->execute($sqlRemoveCarts, [':startDate' => $startDate]);
 
-        // Fill event with number of removed carts
+        // Fill the event with the number of removed carts
         $event->setRemovedCarts($stmtRemoveCarts->rowCount());
     }
 

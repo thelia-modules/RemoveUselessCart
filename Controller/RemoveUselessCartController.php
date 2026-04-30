@@ -7,9 +7,9 @@ use RemoveUselessCart\Event\RemoveUselessCartEvents;
 use RemoveUselessCart\Form\RemoveUselessCartForm;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use \Thelia\Controller\Admin\BaseAdminController;
-use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\HttpFoundation\Session\Session;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
@@ -22,17 +22,14 @@ use Thelia\Core\Translation\Translator;
  */
 class RemoveUselessCartController extends BaseAdminController
 {
-    /**
-     * @return mixed|Response
-     */
     #[Route('/admin/module/RemoveUselessCart', name: 'removeuselesscart.configuration')]
-    public function viewConfigAction(): mixed
+    public function viewConfigAction(): Response
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::VIEW)) {
             return $response;
         }
 
-        return $this->render("removeuselesscart-configuration", []);
+        return $this->render("removeuselesscart-configuration");
     }
 
     /**
@@ -57,7 +54,7 @@ class RemoveUselessCartController extends BaseAdminController
             $event = new RemoveUselessCartEvent($vForm->getData()['start_date'], $vForm->getData()['remove_all']);
             $dispatcher->dispatch($event, RemoveUselessCartEvents::REMOVE_USELESS_CARTS);
 
-            // Get number of removed carts
+            // Get a number of removed carts
             $session->getFlashBag()->add(
                 'remove-cart-result',
                 Translator::getInstance()->trans(
@@ -76,7 +73,7 @@ class RemoveUselessCartController extends BaseAdminController
                 $form
             );
 
-            return $this->render('removeuselesscart-configuration', []);
+            return $this->render('removeuselesscart-configuration');
         }
     }
 }
