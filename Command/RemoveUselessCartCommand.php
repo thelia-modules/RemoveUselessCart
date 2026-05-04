@@ -6,19 +6,26 @@ use DateTime;
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
 use RemoveUselessCart\Event\RemoveUselessCartEvents;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Thelia\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class RemoveUselessCartCommand
  * @package RemoveUselessCart\Command
  * @author Etienne Perriere - OpenStudio <eperriere@openstudio.fr>
  */
-class RemoveUselessCartCommand extends ContainerAwareCommand
+class RemoveUselessCartCommand extends Command
 {
+    public function __construct(protected EventDispatcherInterface $dispatcher)
+    {
+        parent::__construct();
+    }
+
     protected function configure(): void
     {
         $this
@@ -65,7 +72,7 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
                 $startDate,
                 (bool)$input->getOption('all'),
             );
-            $this->getDispatcher()->dispatch($event, RemoveUselessCartEvents::REMOVE_USELESS_CARTS);
+            $this->dispatcher->dispatch($event, RemoveUselessCartEvents::REMOVE_USELESS_CARTS);
 
             // Get a number of removed carts
             $removeCarts = $event->getRemovedCarts();
@@ -93,13 +100,14 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
             // Check if the date isn't too close
             if ($days <= 2) {
                 // Prompt a confirmation message
-                $dialog = $this->getHelper('dialog');
-
-                if (!$dialog->askConfirmation(
+                /** @var QuestionHelper $helper */
+                $helper = $this->getHelper('question');
+                $question = new ConfirmationQuestion(
                     '<question>This is a very short range, current customers\' carts might be removed! Do you really want to continue? (y|N) </question>',
                     false
-                )
-                ) {
+                );
+
+                if (!$helper->ask($input, $output, $question)) {
                     return null;
                 }
             }
