@@ -4,12 +4,4 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-    <route id="removeuselesscart.configuration" path="/admin/module/RemoveUselessCart">
-        <default key="_controller">RemoveUselessCart\Controller\RemoveUselessCartController::viewConfigAction</default>
-    </route>
-
-    <route id="removeuselesscart.remove" path="/admin/module/RemoveUselessCart/remove">
-        <default key="_controller">RemoveUselessCart\Controller\RemoveUselessCartController::removeAction</default>
-    </route>
-
 </routes>

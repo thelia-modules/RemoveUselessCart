@@ -11,60 +11,42 @@ use Thelia\Core\Event\ActionEvent;
  */
 class RemoveUselessCartEvent extends ActionEvent
 {
-    protected mixed $startDate;
-    protected mixed $removeAll;
-    protected mixed $removedCarts;
+    protected string $startDate;
+    protected bool $removeAll;
+    protected ?int $removedCarts = null;
 
-    public function __construct($startDate, $removeAll)
+    public function __construct(string $startDate, bool $removeAll)
     {
         $this->setStartDate($startDate);
         $this->setRemoveAll($removeAll);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStartDate(): mixed
+    public function getStartDate(): string
     {
         return $this->startDate;
     }
 
-    /**
-     * @param mixed $startDate
-     */
-    public function setStartDate($startDate): void
+    public function setStartDate(string $startDate): void
     {
         $this->startDate = $startDate;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRemoveAll(): mixed
+    public function getRemoveAll(): bool
     {
         return $this->removeAll;
     }
 
-    /**
-     * @param mixed $removeAll
-     */
-    public function setRemoveAll($removeAll): void
+    public function setRemoveAll(bool $removeAll): void
     {
         $this->removeAll = $removeAll;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRemovedCarts(): mixed
+    public function getRemovedCarts(): ?int
     {
         return $this->removedCarts;
     }
 
-    /**
-     * @param mixed $removedCarts
-     */
-    public function setRemovedCarts($removedCarts): void
+    public function setRemovedCarts(int $removedCarts): void
     {
         $this->removedCarts = $removedCarts;
     }

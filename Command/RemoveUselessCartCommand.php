@@ -6,20 +6,27 @@ use DateTime;
 use RemoveUselessCart\Event\RemoveUselessCartEvent;
 use RemoveUselessCart\Event\RemoveUselessCartEvents;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Thelia\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class RemoveUselessCartCommand
  * @package RemoveUselessCart\Command
  * @author Etienne Perriere - OpenStudio <eperriere@openstudio.fr>
  */
-class RemoveUselessCartCommand extends ContainerAwareCommand
+class RemoveUselessCartCommand extends Command
 {
-    protected function configure()
+    public function __construct(protected EventDispatcherInterface $dispatcher)
+    {
+        parent::__construct();
+    }
+
+    protected function configure(): void
     {
         $this
             ->setName("carts:remove")
@@ -51,7 +58,7 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): ?int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (null === $startDate = $this->checkInput($input, $output)) {
             return Command::FAILURE;
@@ -63,12 +70,11 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
             // Build event from command line data & dispatch it
             $event = new RemoveUselessCartEvent(
                 $startDate,
-                ($input->getOption('all')) ? true : false,
-                $output
+                (bool)$input->getOption('all'),
             );
-            $this->getDispatcher()->dispatch($event, RemoveUselessCartEvents::REMOVE_USELESS_CARTS);
+            $this->dispatcher->dispatch($event, RemoveUselessCartEvents::REMOVE_USELESS_CARTS);
 
-            // Get number of removed carts
+            // Get a number of removed carts
             $removeCarts = $event->getRemovedCarts();
 
             $output->writeln("<info>Successfully removed $removeCarts carts</info>");
@@ -87,21 +93,21 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
      * @param OutputInterface $output
      * @return null|string
      */
-    protected function checkInput(InputInterface $input, OutputInterface $output)
+    protected function checkInput(InputInterface $input, OutputInterface $output): ?string
     {
         // Get inputted days
         if (null !== $days = $input->getOption('day')) {
             // Check if the date isn't too close
             if ($days <= 2) {
                 // Prompt a confirmation message
-                $dialog = $this->getHelper('dialog');
-
-                if (!$dialog->askConfirmation(
-                    $output,
+                /** @var QuestionHelper $helper */
+                $helper = $this->getHelper('question');
+                $question = new ConfirmationQuestion(
                     '<question>This is a very short range, current customers\' carts might be removed! Do you really want to continue? (y|N) </question>',
                     false
-                )
-                ) {
+                );
+
+                if (!$helper->ask($input, $output, $question)) {
                     return null;
                 }
             }
@@ -143,7 +149,7 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
      * @param $date
      * @return bool
      */
-    protected function validateDate($date)
+    protected function validateDate($date): bool
     {
         $d = DateTime::createFromFormat('Y-m-d', $date);
         return $d instanceof DateTime  && $d->format('Y-m-d') == $date;
@@ -155,7 +161,7 @@ class RemoveUselessCartCommand extends ContainerAwareCommand
      * @param $datetime
      * @return bool
      */
-    protected function validateDateTime($datetime)
+    protected function validateDateTime($datetime): bool
     {
         $dt = DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
         return $dt instanceof DateTime && $dt->format('Y-m-d H:i:s') == $datetime;
