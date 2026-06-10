@@ -22,22 +22,12 @@ use Thelia\Core\Translation\Translator;
  */
 class RemoveUselessCartController extends BaseAdminController
 {
-    #[Route('/admin/module/RemoveUselessCart', name: 'removeuselesscart.configuration')]
-    public function viewConfigAction(): Response
-    {
-        if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::VIEW)) {
-            return $response;
-        }
-
-        return $this->render("removeuselesscart-configuration");
-    }
-
     /**
      * Remove carts with last_update older than the given date
      *
      * @return mixed|RedirectResponse|Response
      */
-    #[Route('/admin/module/RemoveUselessCart/remove', name: 'removeuselesscart.remove')]
+    #[Route('/admin/module/RemoveUselessCart/remove', name: 'removeuselesscart.remove', methods: ['POST'])]
     public function removeAction(Session $session, EventDispatcherInterface $dispatcher): mixed
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'RemoveUselessCart', AccessManager::DELETE)) {
@@ -67,13 +57,13 @@ class RemoveUselessCartController extends BaseAdminController
             // Redirect
             return new RedirectResponse($form->getSuccessUrl());
         } catch (\Exception $e) {
-            $this->setupFormErrorContext(
-                'remove',
-                $e->getMessage(),
-                $form
-            );
+            $session->getFlashBag()->add('error', $e->getMessage());
 
-            return $this->render('removeuselesscart-configuration');
+            return $this->generateRedirectFromRoute(
+                'admin.module.configure',
+                [],
+                ['module_code' => 'RemoveUselessCart']
+            );
         }
     }
 }

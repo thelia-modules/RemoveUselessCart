@@ -1,0 +1,56 @@
+<div class="card mb-3">
+    <div class="card-header">
+        <h5 class="card-title mb-0">{{ 'Remove useless carts'|trans({}, 'removeuselesscart.bo.default') }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-warning mb-3">
+            {{ 'Warning: this operation may take a while for huge databases. You should do it in several times. Please wait until success or error message is displayed.'|trans({}, 'removeuselesscart.bo.default') }}
+        </div>
+
+        {% for message in app.flashes('remove-cart-result') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+
+        <form action="{{ path('removeuselesscart.remove') }}" method="post">
+            <input type="hidden" name="{{ form.vars.full_name }}[success_url]" value="{{ path('admin.module.configure', {module_code: 'RemoveUselessCart'}) }}">
+            <input type="hidden" name="{{ form.vars.full_name }}[_token]" value="{{ form._token.vars.value }}">
+
+            <div class="mb-3">
+                {{ form_label(form.start_date, null, {label_attr: {class: 'form-label'}}) }}
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control{{ form.start_date.vars.errors|length ? ' is-invalid' : '' }}"
+                           name="{{ form.vars.full_name }}[start_date]"
+                           id="startDate"
+                           value="{{ date('now')|date_modify('-1 week')|date('Y-m-d H:i:s') }}"
+                           placeholder="YYYY-MM-DD HH:mm:ss"
+                           required>
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                </div>
+                {% if form.start_date.vars.errors|length %}
+                    <div class="invalid-feedback d-block">{{ form_errors(form.start_date) }}</div>
+                {% endif %}
+                <div class="form-text">{{ 'Format: YYYY-MM-DD HH:mm:ss'|trans({}, 'removeuselesscart.bo.default') }}</div>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox"
+                       class="form-check-input"
+                       name="{{ form.vars.full_name }}[remove_all]"
+                       id="removeAll"
+                       value="1">
+                <label class="form-check-label" for="removeAll">
+                    {{ form.remove_all.vars.label }}
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                {{ 'OK'|trans({}, 'removeuselesscart.bo.default') }}
+            </button>
+        </form>
+    </div>
+</div>
